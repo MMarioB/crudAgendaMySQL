@@ -11,6 +11,32 @@ except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
     print("Ocurrió un error al conectar: ", e)
 
 cursor = conexion.cursor()
+
+
+def menu():
+    print("*" * 20)
+    print("- Menú Agenda -")
+    print("[1] - Alta")
+    print("[2] - Baja")
+    print("[3] - Modificar")
+    print("[4] - Buscar")
+    print("[5] - Mostrar Todo")
+    print("[0] - Salir")
+    print("*" * 20)
+    opc = int(input("Elige una opcion:\n"))
+    return opc
+
+
+def continuar():
+    print("*" * 20)
+    print("Quieres continuar?")
+    print("[1] - Seguir")
+    print("[0] - Salir")
+    print("*" * 20)
+    opc = int(input("Elige una opcion:\n"))
+    return opc
+
+
 def alta():
     nombre = input("Introduce el nombre\n")
     apellidos = input("Introduce el apellido\n")
@@ -49,7 +75,13 @@ def buscar():
     dato = cursor.execute(consulta)
     registros = cursor.fetchall()
     for registro in registros:
-        print(registro)
+        print("***********************************")
+        print(" -- CONTACTO -- ")
+        print("- Nombre", registro[0])
+        print("- Apellidos", registro[1])
+        print("- Telefono", registro[2])
+        print("- Edad", registro[3])
+        print("***********************************")
     conexion.commit()
 
 
@@ -58,41 +90,58 @@ def mostrar():
     cursor.execute(consulta)
     registros = cursor.fetchall()
     for registro in registros:
-        print(registro)
+        print("***********************************")
+        print(" -- CONTACTO -- ")
+        print("- Nombre:", registro[0])
+        print("- Apellidos:", registro[1])
+        print("- Telefono:", registro[2])
+        print("- Edad:", registro[3])
+        print("***********************************")
     conexion.commit()
 
 
-def menu():
-    print("*" * 20)
-    print("- Menú Agenda -")
-    print("[1] - Alta")
-    print("[2] - Baja")
-    print("[3] - Modificar")
-    print("[4] - Buscar")
-    print("[5] - Mostrar Todo")
-    print("[0] - Salir")
-    print("*" * 20)
-    opc = int(input("Elige una opcion:\n"))
-    return opc
-
+print("Empezamos")
 
 salir = False
-opcion = 0
-
-print("Empezamos")
+salirAlta = False
+salirBaja = False
+salirModificar = False
+salirBuscar = False
+seguir = ''
 while not salir:
     opcion = menu()
     if opcion == 1:
         alta()
+        op1 = continuar()
+        while op1 != 0:
+            alta()
+            op1 = continuar()
+
     elif opcion == 2:
         baja()
+        op1 = continuar()
+        while op1 != 0:
+            baja()
+            op1 = continuar()
     elif opcion == 3:
         modificar()
+        op1 = continuar()
+        while op1 != 0:
+            modificar()
+            op1 = continuar()
     elif opcion == 4:
         buscar()
+        op1 = continuar()
+        while op1 != 0:
+            buscar()
+            op1 = continuar()
     elif opcion == 5:
         mostrar()
     elif opcion == 0:
+        op1 = continuar()
+        while op1 != 0:
+            opcion = menu()
+            op1 = continuar()
         salir = True
         conexion.close()
     else:
