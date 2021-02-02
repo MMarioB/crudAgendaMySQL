@@ -3,14 +3,16 @@ import pymysql
 try:
     conexion = pymysql.connect(host='localhost',
                                user='root',
-                               password='',
-                               db='contactos')
+                               password='')
+    conexion.cursor().execute("CREATE DATABASE IF NOT EXISTS agenda_db;")
     print("Conexión correcta")
 
 except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
     print("Ocurrió un error al conectar: ", e)
 
 cursor = conexion.cursor()
+
+cursor.execute("CREATE TABLE IF NOT EXISTS agenda_db.contacto (nombre TEXT, apellido TEXT, telefono TEXT, edad INT)")
 
 
 def menu():
@@ -42,7 +44,7 @@ def alta():
     apellidos = input("Introduce el apellido\n")
     telefono = input("Introduce el telefono\n")
     edad = input("Introduce la edad\n")
-    consulta = "INSERT INTO contacto VALUES('" + nombre + "','" + apellidos + "'," + "'" + telefono + "'," + edad + ") "
+    consulta = "INSERT INTO agenda_db.contacto VALUES('" + nombre + "','" + apellidos + "'," + "'" + telefono + "'," + edad + ") "
     print(consulta)
     cursor.execute(consulta)
     conexion.commit()
@@ -50,7 +52,7 @@ def alta():
 
 def baja():
     apellido = input("Introduce el apellido del contacto que quieres borrar")
-    consulta = "DELETE FROM contacto WHERE apellidos=" + "'" + apellido + "'"
+    consulta = "DELETE FROM agenda_db.contacto WHERE apellidos=" + "'" + apellido + "'"
     print(consulta)
     cursor.execute(consulta)
     conexion.commit()
@@ -61,7 +63,7 @@ def modificar():
     telefonoN = input("Introduce el telefono nuevo del contacto")
     edadN = input("Introduce la edad nueva del contacto")
     apellido = input("Introduce el apellido del contacto que quieres modificar")
-    consulta = "UPDATE contacto SET nombre=" + "'" + nombreN + "', " + "telefono=" + "'" + telefonoN + "', " + "edad=" \
+    consulta = "UPDATE agenda_db.contacto SET nombre=" + "'" + nombreN + "', " + "telefono=" + "'" + telefonoN + "', " + "edad=" \
                + edadN + " WHERE apellidos='" + apellido + "'"
     print(consulta)
     cursor.execute(consulta)
@@ -70,7 +72,7 @@ def modificar():
 
 def buscar():
     apellido = input("Introduce el apellido del contacto que quieres buscar")
-    consulta = "SELECT * FROM contacto WHERE apellidos='" + apellido + "'"
+    consulta = "SELECT * FROM agenda_db.contacto WHERE apellidos='" + apellido + "'"
     print(consulta)
     dato = cursor.execute(consulta)
     registros = cursor.fetchall()
@@ -86,7 +88,7 @@ def buscar():
 
 
 def mostrar():
-    consulta = "SELECT * FROM contacto"
+    consulta = "SELECT * FROM agenda_db.contacto"
     cursor.execute(consulta)
     registros = cursor.fetchall()
     for registro in registros:
