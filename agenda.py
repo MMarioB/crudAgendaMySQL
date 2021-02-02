@@ -1,19 +1,5 @@
 import pymysql
 
-try:
-    conexion = pymysql.connect(host='localhost',
-                               user='root',
-                               password='')
-    conexion.cursor().execute("CREATE DATABASE IF NOT EXISTS agenda_db;")
-    print("Conexión correcta")
-
-except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
-    print("Ocurrió un error al conectar: ", e)
-
-cursor = conexion.cursor()
-
-cursor.execute("CREATE TABLE IF NOT EXISTS agenda_db.contacto (nombre TEXT, apellido TEXT, telefono TEXT, edad INT)")
-
 
 def menu():
     print("*" * 20)
@@ -103,6 +89,20 @@ def mostrar():
 
 
 print("Empezamos")
+
+try:
+    conexion = pymysql.connect(host='localhost',
+                               user='root',
+                               password='')
+    conexion.cursor().execute("CREATE DATABASE IF NOT EXISTS agenda_db;")
+    print("Conexión correcta")
+
+except (pymysql.err.OperationalError, pymysql.err.InternalError) as e:
+    print("Ocurrió un error al conectar: ", e)
+
+cursor = conexion.cursor()
+
+cursor.execute("CREATE TABLE IF NOT EXISTS agenda_db.contacto (nombre TEXT, apellido TEXT, telefono TEXT, edad INT)")
 
 salir = False
 salirAlta = False
